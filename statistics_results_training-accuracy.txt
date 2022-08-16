@@ -1,0 +1,133 @@
+> x = read.csv('human-model-comparison.csv')
+> 
+> x_TM = subset(x, comparison=='TM')
+> x_TS = subset(x, comparison=='TS')
+> x_MS = subset(x, comparison=='MS')
+> 
+> x_human_TMTS = subset(subset(x, who=='human'), comparison == 'TM' | comparison == 'TS')
+> x_human_TMMS = subset(subset(x, who=='human'), comparison == 'TM' | comparison == 'MS')
+> x_human_TSMS = subset(subset(x, who=='human'), comparison == 'TS' | comparison == 'MS')
+> 
+> x_model_TMTS = subset(subset(x, who=='model'), comparison == 'TM' | comparison == 'TS')
+> x_model_TMMS = subset(subset(x, who=='model'), comparison == 'TM' | comparison == 'MS')
+> x_model_TSMS = subset(subset(x, who=='model'), comparison == 'TS' | comparison == 'MS')
+> 
+> # whether there is a difference between the model and the human data differences
+> dist = lmer(value ~ who + (1|subject), data=x_TM, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_TM, REML=FALSE)
+> anova(dist, none)
+Data: x_TM
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ who + (1 | subject)
+     npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)  
+none    3 -831.00 -820.15 418.50  -837.00                       
+dist    4 -833.61 -819.14 420.81  -841.61 4.6095  1     0.0318 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> dist = lmer(value ~ who + (1|subject), data=x_TS, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_TS, REML=FALSE)
+> anova(dist, none)
+Data: x_TS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ who + (1 | subject)
+     npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)
+none    3 -820.30 -809.45 413.15  -826.30                     
+dist    4 -819.62 -805.15 413.81  -827.62 1.3183  1     0.2509
+> 
+> dist = lmer(value ~ who + (1|subject), data=x_MS, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_MS, REML=FALSE)
+> anova(dist, none)
+Data: x_MS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ who + (1 | subject)
+     npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)
+none    3 -1052.4 -1041.5 529.20  -1058.4                     
+dist    4 -1052.4 -1037.9 530.19  -1060.4 1.9897  1     0.1584
+> 
+> # whether within the human data there is a difference between conditions
+> dist = lmer(value ~ comparison + (1|subject), data=x_human_TMTS, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_human_TMTS, REML=FALSE)
+> anova(dist, none)
+Data: x_human_TMTS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ comparison + (1 | subject)
+     npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)   
+none    3 -41.442 -35.706 23.721  -47.442                        
+dist    4 -46.294 -38.646 27.147  -54.294 6.8523  1   0.008853 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> dist = lmer(value ~ comparison + (1|subject), data=x_human_TMMS, REML=FALSE)
+boundary (singular) fit: see ?isSingular
+> none = lmer(value ~ 1 + (1|subject), data=x_human_TMMS, REML=FALSE)
+boundary (singular) fit: see ?isSingular
+> anova(dist, none)
+Data: x_human_TMMS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ comparison + (1 | subject)
+     npar     AIC     BIC logLik deviance Chisq Df Pr(>Chisq)  
+none    3 -30.643 -24.907 18.321  -36.643                      
+dist    4 -33.193 -25.545 20.596  -41.193  4.55  1    0.03292 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> dist = lmer(value ~ comparison + (1|subject), data=x_human_TSMS, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_human_TSMS, REML=FALSE)
+boundary (singular) fit: see ?isSingular
+> anova(dist, none)
+Data: x_human_TSMS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ comparison + (1 | subject)
+     npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)    
+none    3 -25.238 -19.502 15.619  -31.238                         
+dist    4 -34.872 -27.224 21.436  -42.872 11.634  1  0.0006476 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> # whether within the model data there is a difference between conditions
+> dist = lmer(value ~ comparison + (1|subject), data=x_model_TMTS, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_model_TMTS, REML=FALSE)
+> anova(dist, none)
+Data: x_model_TMTS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ comparison + (1 | subject)
+     npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)    
+none    3 -1143.7 -1131.0 574.84  -1149.7                         
+dist    4 -1210.1 -1193.2 609.05  -1218.1 68.422  1  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> dist = lmer(value ~ comparison + (1|subject), data=x_model_TMMS, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_model_TMMS, REML=FALSE)
+> anova(dist, none)
+Data: x_model_TMMS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ comparison + (1 | subject)
+     npar     AIC     BIC logLik deviance Chisq Df Pr(>Chisq)    
+none    3 -516.54 -503.90 261.27  -522.54                        
+dist    4 -636.24 -619.38 322.12  -644.24 121.7  1  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> 
+> dist = lmer(value ~ comparison + (1|subject), data=x_model_TSMS, REML=FALSE)
+> none = lmer(value ~ 1 + (1|subject), data=x_model_TSMS, REML=FALSE)
+> anova(dist, none)
+Data: x_model_TSMS
+Models:
+none: value ~ 1 + (1 | subject)
+dist: value ~ comparison + (1 | subject)
+     npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)    
+none    3 -520.93 -508.29 263.47  -526.93                         
+dist    4 -800.67 -783.81 404.33  -808.67 281.74  1  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
